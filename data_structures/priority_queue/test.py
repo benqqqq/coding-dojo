@@ -1,4 +1,4 @@
-from priority_queue.code import PriorityQueue
+from data_structures.priority_queue.code import PriorityQueue
 
 
 class TestPriorityQueue:
