@@ -41,10 +41,3 @@ class Solution:
                     return -1
 
         return elapsed_minutes
-
-Beats
-18.69%
-Memory
-16.5 MB
-Beats
-7.65%
