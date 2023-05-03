@@ -1,7 +1,8 @@
 import { Board } from "./Board";
-import { Control } from "./Control";
+import { History } from "./History";
 import img from "./img.png";
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { GameInformation } from './GameInformation';
 
 export function TicTacToe() {
   const players = useState()
@@ -9,8 +10,10 @@ export function TicTacToe() {
   return (
     <>
       <h1>Tic Tac Toe</h1>
+      <div></div>
+      <GameInformation />
       <Board />
-      <Control />
+      <History />
 
       <h3>Reference</h3>
       <img src={img} alt="reference image" />
