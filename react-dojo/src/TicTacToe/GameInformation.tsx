@@ -1,7 +1,8 @@
 export function GameInformation() {
   return (
-    <>
-      <h1>Game Information</h1>
-    </>
+    <div className="px-5 py-3">
+      <p>Next Plater :</p>
+      <p>Winner :</p>
+    </div>
   );
 }
