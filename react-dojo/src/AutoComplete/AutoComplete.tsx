@@ -1,42 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState, } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchData } from "./hooks";
 
 export const AutoComplete = () => {
-  const [result, setResult] = useState<any[]>([]);
-  const [search, setSearch] = useState<string>("");
   const [focus, setFocus] = useState<boolean>(false);
   const [focusIndex, setFocusIndex] = useState<number>(0);
-
-  const debounce = (fn: any, delay: number) => {
-    let timer: any;
-    return (...args: any) => {
-      if (timer) {
-        clearTimeout(timer);
-      }
-      timer = setTimeout(() => {
-        fn(...args);
-      }, delay);
-    };
-  }
-
-  useEffect(() => {
-    setResult([]);
-
-    if (!focus) {
-      return;
-    }
-
-    const fetchData = async () => {
-      const resp = await fetch("https://jsonplaceholder.typicode.com/users");
-      const data: any[] = await resp.json();
-      const filteredData = data.filter((item) =>
-        item.name.toLowerCase().includes(search.toLowerCase())
-      );
-      setResult(filteredData);
-      console.log(`fetch data caused by query change: ${search}`);
-    };
-
-    debounce(fetchData, 200)()
-  }, [search, focus]);
+  const [query, result, search] = useSearchData();
 
   const handleKeyDown = useCallback(
     (key: string) => {
@@ -49,11 +17,11 @@ export const AutoComplete = () => {
       } else if (key === "ArrowUp") {
         setFocusIndex((focusIndex - 1 + result.length) % result.length);
       } else if (key === "Enter") {
-        setSearch(result[focusIndex].name);
+        search(result[focusIndex].name);
         setFocus(false);
       }
     },
-    [focusIndex, result, focus]
+    [focus, focusIndex, result]
   );
 
   useEffect(() => {
@@ -62,6 +30,11 @@ export const AutoComplete = () => {
       ?.scrollIntoView();
   }, [focusIndex]);
 
+  useEffect(() => {
+    if (focus) {
+      search(query);
+    }
+  }, [focus]);
 
   const ulRef = useRef<HTMLUListElement>(null);
 
@@ -69,10 +42,18 @@ export const AutoComplete = () => {
     <div className="flex flex-col items-center justify-center w-screen">
       <h1>AutoComplete</h1>
       <br />
+      <div>
+        DEBUG
+        <ul>
+          <li>{`focus: ${focus ? "true" : "false"}`}</li>
+          <li>{`query: ${query}`}</li>
+          <li>{`result.length: ${result.length}`}</li>
+        </ul>
+      </div>
       <div className="relative">
         <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={query}
+          onChange={(e) => search(e.target.value)}
           type="text"
           placeholder="Search"
           onFocus={() => setFocus(true)}
